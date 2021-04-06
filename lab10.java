@@ -12,6 +12,7 @@ import javafx.scene.layout.GridPane;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 
+import java.io.IOException;
 import java.io.DataOutputStream;
 import java.io.DataInputStream;
 import java.net.Socket;
@@ -44,27 +45,52 @@ public class lab10 extends Application
         myGrid.add(txtMessage, 1, 1);
         myGrid.add(lbUsername, 0, 2);
         myGrid.add(txtUsername, 1, 2);
+        myGrid.add(sendButton, 0, 3);
+        myGrid.add(exitButton, 1, 3);
 
         sendButton.setOnAction(e -> 
         {
             if (client.isConnected())
             {
-                dout.writeUTF(txtUsername.getText() + ': ' + txtMessage.getText());
-                dout.flush();
+                try
+                {
+                    dout.writeUTF(txtUsername.getText() + ": " + txtMessage.getText());
+                    dout.flush();
+                }
+                catch (Exception ex)
+                {
+                    ex.printStackTrace();
+                }
             }
             else
             {
-                dout.close();
-                client.close();
-                System.exit(0);
+                try
+                {
+                    dout.close();
+                    client.close();
+                    System.exit(0);
+                }
+                catch (Exception ex)
+                {
+                    ex.printStackTrace();
+                    System.exit(-1);
+                }
             }
         });
 
         exitButton.setOnAction(e -> 
         {
-            dout.close();
-            client.close();
-            System.exit(0);
+            try
+            {
+                dout.close();
+                client.close();
+                System.exit(0);
+            }
+            catch (Exception ex)
+            {
+                ex.printStackTrace();
+                System.exit(-1);
+            }
         });
 
         Scene scene = new Scene(myGrid, 350, 350);
